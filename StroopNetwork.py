@@ -22,6 +22,8 @@ def get_row(index): # 0-10
         return row
 
 def forward(w_0, w_1, w_2, w_3, w_4, w_5):
+    y2_list = [ ]
+    y3_list = [ ]
     e_full = 0
     for i in range (1, 11):
         c_row = get_row(i-1)
@@ -31,7 +33,7 @@ def forward(w_0, w_1, w_2, w_3, w_4, w_5):
         w_r = c_row[3] # task demand: word
         R_i = c_row[4] # word: red
         G_i = c_row[5] # word: green
-        t = c_row[6] #target
+        t = c_row[6] #target in terms of red
 
         # layer 2
         l2_1_in = np.array([r_i, g_i, c_n, w_r])
@@ -66,12 +68,36 @@ def forward(w_0, w_1, w_2, w_3, w_4, w_5):
             print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
             print(t*100, "% real red")
         i = i+1
-
-        y= l3_green_out
+        y= l3_red_out
         e = 1/2*(t-y)**2 # quadatic error
         e_full = e_full + e
         print(e)
         print("------")
-    print(e_full/10)
+        print("net error is now {}".format(e_full/10))
+        y2_list.append(l3_red_in)
+        y3_list.append(y)
+    return y3_list, y2_list
 
-forward(l2_1_w, l2_2_w, l2_3_w, l2_4_w, l3_red_w, l3_green_w)
+def backward(y3_list, weights, y2_list):
+    for i in range (1, 11):
+        c_row = get_row(i-1)
+        t = c_row[6] #target in terms of red
+        y3 = y3_list[i-1]
+
+        c_wrt_y3 = -1*(t-y3)
+        y3_wrt_z = y3*(1-y3)
+        c_wrt_z = c_wrt_y3 * y3_wrt_z
+        c_wrt_y2 = c_wrt_z * weights
+        c_wrt_weights = c_wrt_y2 * 
+
+
+
+
+        print(c_wrt_z)
+
+
+y3_list = forward(l2_1_w, l2_2_w, l2_3_w, l2_4_w, l3_red_w, l3_green_w)
+
+backward(y3_list, )
+
+print(y3_list)
