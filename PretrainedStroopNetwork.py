@@ -57,4 +57,4 @@ print(l3_green_out)
 if l3_green_out > l3_red_out:
     print("green, {}% certainty".format(str(round(l3_green_out*100.,2))))
 else:
-    print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
+    print("red, {}% certainty".format(str(round(l3_red_out*100.,2))))
