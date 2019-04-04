@@ -1,5 +1,4 @@
 import math
-from random import randint
 import pandas as pd
 import numpy as np
 train = pd.read_csv('traindata.csv')
@@ -16,7 +15,7 @@ def get_row(index): # 0-10
     
 def forward():
     for i in range (1, 11):
-        c_row = get_row(i-1) # for?
+        c_row = get_row(i-1)
         r_i = c_row[0] # colour: red
         g_i = c_row[1] # colour: green
         c_n = c_row[2] # task demand: colour
@@ -59,10 +58,15 @@ def forward():
 
         if l3_green_out > l3_red_out:
             print("green, {}% certainty".format(str(round(l3_green_out*100.,2))))
-            print(t, "red")
+            print(t*100, "red")
         else:
             print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
-            print(t, "% real red")
+            print(t*100, "% real red")
         i = i+1
+
+        y= l3_green_out
+        e = 1/2*(t-y)**2
+        print(e)
+        print("---pass over---")
 
 forward()
