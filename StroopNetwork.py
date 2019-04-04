@@ -13,59 +13,56 @@ def net(a, w, b):
 def get_row(index): # 0-10
         row = train.iloc[index]
         return row
+    
+def forward():
+    for i in range (1, 11):
+        c_row = get_row(i-1) # for?
+        r_i = c_row[0] # colour: red
+        g_i = c_row[1] # colour: green
+        c_n = c_row[2] # task demand: colour
+        w_r = c_row[3] # task demand: word
+        R_i = c_row[4] # word: red
+        G_i = c_row[5] # word: green
+        t = c_row[6] #target
 
-c_row = get_row(2) # for?
+        # layer 2
+        l2_1_w = np.array([2, 2, 2])
+        l2_1_in = np.array([r_i, g_i, c_n])
+        l2_1_b = -4.0
+        l2_1_out = act(net(l2_1_in, l2_1_w, l2_1_b))
 
-r_i = c_row[0] # colour: red
-g_i = c_row[1] # colour: green
-c_n = c_row[2] # task demand: colour
-w_r = c_row[3] # task demand: word
-R_i = c_row[4] # word: red
-G_i = c_row[5] # word: green
-t = c_row[6] #target
+        l2_2_w = np.array([2, 2, 2])
+        l2_2_in = np.array([r_i, g_i, c_n])
+        l2_2_b = -4.0
+        l2_2_out = act(net(l2_2_in, l2_2_w, l2_2_b))
 
-#L2 LHS
-l2_1_w = np.array([2, 2, 2])
-l2_1_in = np.array([r_i, g_i, c_n])
-l2_1_b = -4.0
-l2_1_out = act(net(l2_1_in, l2_1_w, l2_1_b))
-print(l2_1_out)
+        l2_3_w = np.array([2, 2, 2])
+        l2_3_in = np.array([w_r, R_i, G_i])
+        l2_3_b = -4.0
+        l2_3_out = act(net(l2_3_in, l2_3_w, l2_3_b))
 
-l2_2_w = np.array([2, 2, 2])
-l2_2_in = np.array([r_i, g_i, c_n])
-l2_2_b = -4.0
-l2_2_out = act(net(l2_2_in, l2_2_w, l2_2_b))
-print(l2_2_out)
+        l2_4_w = np.array([2, 2, 2])
+        l2_4_in = np.array([w_r, R_i, G_i])
+        l2_4_b = -4.0
+        l2_4_out = act(net(l2_4_in, l2_4_w, l2_4_b))
 
-#L2 RHS
-l2_3_w = np.array([2, 2, 2])
-l2_3_in = np.array([w_r, R_i, G_i])
-l2_3_b = -4.0
-l2_3_out = act(net(l2_3_in, l2_3_w, l2_3_b))
-print(l2_3_out)
+        # layer 3
+        l3_red_w = np.array([2, 2, 2, 2])
+        l3_red_in = np.array([l2_1_out, l2_2_out, l2_3_out, l2_4_out])
+        l3_red_b = 0
+        l3_red_out = act(net(l3_red_in, l3_red_w, l3_red_b))
 
-l2_4_w = np.array([2, 2, 2])
-l2_4_in = np.array([w_r, R_i, G_i])
-l2_4_b = -4.0
-l2_4_out = act(net(l2_4_in, l2_4_w, l2_4_b))
-print(l2_3_out)
+        l3_green_w = np.array([2, 2, 2, 2])
+        l3_green_in = np.array([l2_1_out, l2_2_out, l2_3_out, l2_4_out])
+        l3_green_b = 0
+        l3_green_out = act(net(l3_green_in, l3_green_w, l3_green_b))
 
-# RESP 3
-l3_red_w = np.array([2, 2, 2, 2])
-l3_red_in = np.array([l2_1_out, l2_2_out, l2_3_out, l2_4_out])
-l3_red_b = 0
-l3_red_out = act(net(l3_red_in, l3_red_w, l3_red_b))
-print(l3_red_out)
+        if l3_green_out > l3_red_out:
+            print("green, {}% certainty".format(str(round(l3_green_out*100.,2))))
+            print(t, "red")
+        else:
+            print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
+            print(t, "% real red")
+        i = i+1
 
-l3_green_w = np.array([2, 2, 2, 2])
-l3_green_in = np.array([l2_1_out, l2_2_out, l2_3_out, l2_4_out])
-l3_green_b = 0
-l3_green_out = act(net(l3_green_in, l3_green_w, l3_green_b))
-print(l3_green_out)
-
-if l3_green_out > l3_red_out:
-    print("green, {}% certainty".format(str(round(l3_green_out*100.,2))))
-    print(t, "red")
-else:
-    print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
-    print(t, "% real red")
+forward()
