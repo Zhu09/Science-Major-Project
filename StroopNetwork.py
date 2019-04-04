@@ -14,6 +14,7 @@ def get_row(index): # 0-10
         return row
     
 def forward():
+    e_full = 0
     for i in range (1, 11):
         c_row = get_row(i-1)
         r_i = c_row[0] # colour: red
@@ -65,8 +66,10 @@ def forward():
         i = i+1
 
         y= l3_green_out
-        e = 1/2*(t-y)**2
+        e = 1/2*(t-y)**2 # quadatic error
+        e_full = e_full + e
         print(e)
-        print("---pass over---")
+        print("------")
+    print(e_full/10)
 
 forward()
