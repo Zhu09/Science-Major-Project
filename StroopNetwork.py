@@ -79,25 +79,14 @@ def forward(w_0, w_1, w_2, w_3, w_4, w_5):
     return y3_list, y2_list
 
 def backward(y3_list, weights, y2_list):
-    for i in range (1, 11):
-        c_row = get_row(i-1)
-        t = c_row[6] #target in terms of red
-        y3 = y3_list[i-1]
+    npa3 = np.asarray(y3_list, dtype=np.float64)
+    npa2 = np.asarray(y2_list, dtype=np.float64)
+    wi = np.asarray(weights, dtype=np.float64)
 
-        c_wrt_y3 = -1*(t-y3)
-        y3_wrt_z = y3*(1-y3)
-        c_wrt_z = c_wrt_y3 * y3_wrt_z
-        c_wrt_y2 = c_wrt_z * weights
-        c_wrt_weights = c_wrt_y2 * 
+    
 
 
 
+y3_list, y2_list = forward(l2_1_w, l2_2_w, l2_3_w, l2_4_w, l3_red_w, l3_green_w)
 
-        print(c_wrt_z)
-
-
-y3_list = forward(l2_1_w, l2_2_w, l2_3_w, l2_4_w, l3_red_w, l3_green_w)
-
-backward(y3_list, )
-
-print(y3_list)
+backward(y3_list,l3_red_w, y2_list)
