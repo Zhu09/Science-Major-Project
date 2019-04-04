@@ -1,5 +1,8 @@
 import math
+from random import randint
+import pandas as pd
 import numpy as np
+train = pd.read_csv('traindata.csv')
 
 def act(z): 
     return 1./(1.+ math.exp(-z))
@@ -7,13 +10,19 @@ def act(z):
 def net(a, w, b):
     return b+a.dot(w)
 
-#L1 
-r_i = 0. # colour: red
-g_i = 1. # colour: green
-c_n = 0. # task demand: colour
-w_r = 1. # task demand: word
-R_i = 1. # word: red
-G_i = 0. # word: green
+def get_row(index): # 0-10
+        row = train.iloc[index]
+        return row
+
+c_row = get_row(2) # for?
+
+r_i = c_row[0] # colour: red
+g_i = c_row[1] # colour: green
+c_n = c_row[2] # task demand: colour
+w_r = c_row[3] # task demand: word
+R_i = c_row[4] # word: red
+G_i = c_row[5] # word: green
+t = c_row[6] #target
 
 #L2 LHS
 l2_1_w = np.array([2, 2, 2])
@@ -56,5 +65,7 @@ print(l3_green_out)
 
 if l3_green_out > l3_red_out:
     print("green, {}% certainty".format(str(round(l3_green_out*100.,2))))
+    print(t, "red")
 else:
     print("red {}% certainty".format(str(round(l3_red_out*100.,2))))
+    print(t, "% real red")
